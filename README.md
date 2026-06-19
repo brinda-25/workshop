@@ -12,9 +12,9 @@ Post your estimates here - https://forms.gle/fanYuH7cXLiWKcMn6
 
 TBD
 
-### Skills Benchmarking
+### Aptitude Skills Benchmarking
 
-TBD
+Attempt quiz here - https://forms.gle/E8fJL8FrTH5dP8L2A
 
 ## Day 2 - Algorithm Building
 
