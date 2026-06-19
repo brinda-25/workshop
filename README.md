@@ -1,10 +1,34 @@
 # Workshop
 
-## Day 1 - The Gumball Experiment
+## Day 1 - Foundations
+
+### The Gumball Experiment
 
 How many gumballs do you see ?
 
-Post your responses here - https://forms.gle/fanYuH7cXLiWKcMn6
+Post your estimates here - https://forms.gle/fanYuH7cXLiWKcMn6
+
+### Interview Landscape
+
+TBD
+
+### Skills Benchmarking
+
+TBD
+
+## Day 2 - Algorithm Building
+
+### Python Hckathon - Password Guesing Algorithm
+
+Post your code snippets here - https://forms.gle/HDTTefj7UvoAYSRMA
+
+### The Data Science Interview
+
+TBD
+
+### Code Interview
+
+Post your code snippets here - https://forms.gle/KUTKRpdFkmAo6egq7
 
 ## Developer Instructions
 
