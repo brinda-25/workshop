@@ -28,6 +28,6 @@ Welcome to the **Practical Data Science & Algorithms Workshop** repository. This
 
 | Day | Quick Links |
 | :--- | :--- |
-| **Day 1**  | 🗳️ [Gumball Estimation](https://forms.gle/fanYuH7cXLiWKcMn6){:target="_blank"} |
-| **Day 1**  | ✍️ [Aptitude Quiz](https://forms.gle/wv4TM43ULXoLwWp98){:target="_blank"} |
-| **All Days** | 📝 [Questions Feedback and Suggestions](https://forms.gle/Vx2ojbp25tSD7eCe8){:target="_blank"} |
+| **Day 1**  | 🗳️ <a href="https://forms.gle/fanYuH7cXLiWKcMn6" target="_blank" rel="noopener noreferrer">Gumball Estimation</a> |
+| **Day 1**  | ✍️ <a href="https://forms.gle/wv4TM43ULXoLwWp98" target="_blank" rel="noopener noreferrer">Aptitude Quiz</a> |
+| **All Days** | 📝 <a href="https://forms.gle/Vx2ojbp25tSD7eCe8" target="_blank" rel="noopener noreferrer">Questions Feedback and Suggestions</a> |
