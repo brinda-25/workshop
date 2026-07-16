@@ -1,0 +1,25 @@
+from fitness import score_guess
+import random
+PASSWORD_LENGTH = 8
+ALLOWED_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz'
+
+def guess_password():       
+    best_password = 'abcdefgh'
+    best_score = score_guess(best_password)
+
+    while best_score != 100:
+        random_index = random.randint(0, PASSWORD_LENGTH-1)
+        random_character = random.choice(ALLOWED_CHARACTERS)
+        new_password = list(best_password)
+        new_password[random_index] = random_character
+        new_password = ''.join(new_password)
+        new_score = score_guess(new_password)
+        if new_score > best_score:
+            best_password = new_password
+            best_score = new_score
+
+    return best_password
+        
+if __name__ == '__main__':
+    password = guess_password()
+    print(f'The password is {password}')
