@@ -24,13 +24,14 @@ Welcome to the **Practical Data Science & Algorithms Workshop** repository. This
 
 ---
 
-## 🗺️ Roadmap & Schedule
+## 🔗 Important Links
 
 | No. | Quick Links |
 | :--- | :--- |
-| **1**  | 🗳️ [Gumball Estimation](https://forms.gle/fanYuH7cXLiWKcMn6) |
-| **2**  | ✍️ [Aptitude Quiz](https://forms.gle/wv4TM43ULXoLwWp98) |
-| **3**  | 💻 [Python Code Review - Code Submission](https://forms.gle/MhTBiPA47z9oYTt27) |
-| **4**  | 💾 [Python Hackathon - Code Submission](https://forms.gle/6J58xhTga35Gvp2o9) |
-| **5**  | 💰 [Financial Literacy](https://forms.gle/oHaMNQBJYxudL3bY9) |
-| **99** | 📝 [Questions Feedback and Suggestions](https://forms.gle/Vx2ojbp25tSD7eCe8) |
+| **   1 **  | 🗳️ [Gumball Estimation](https://forms.gle/fanYuH7cXLiWKcMn6) |
+| **   2 **  | ✍️ [Aptitude Quiz](https://forms.gle/wv4TM43ULXoLwWp98) |
+| **   3 **  | 💻 [Python Code Review - Code Submission](https://forms.gle/MhTBiPA47z9oYTt27) |
+| **   4 **  | 💾 [Python Hackathon - Code Submission](https://forms.gle/6J58xhTga35Gvp2o9) |
+| **   5 **  | 💰 [Financial Literacy](https://forms.gle/oHaMNQBJYxudL3bY9) |
+| **  99 **  | 📝 [Questions Feedback and Suggestions](https://forms.gle/jDdqouHVhc5Jt1Bc6) |
+| ** 100 **  | 🎓 [End of Program Feedback](https://forms.gle/APrDzJwyrXhmN7rb9) |
