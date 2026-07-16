@@ -8,3 +8,7 @@ def guess_password():
     # Scores range from 0 to 100 - Higher the score the better the guess
     #  return final password when score = 100
     return ''
+
+if __name__ == '__main__':
+    password = guess_password()
+    print(f'The password is {password}')
