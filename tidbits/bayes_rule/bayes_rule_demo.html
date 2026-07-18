@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bayes' Rule: The Marble Mystery</title>
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Design System & Visual Foundation */
+    :root {
+      --bg-dark: #090d16;
+      --bg-slate: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.45);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --glow-indigo: rgba(99, 102, 241, 0.15);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      
+      --color-red: #ef4444;
+      --color-red-glow: rgba(239, 68, 68, 0.5);
+      --color-blue: #3b82f6;
+      --color-blue-glow: rgba(59, 130, 246, 0.5);
+      --color-accent: #f59e0b;
+      --color-success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-dark) 70%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    /* Core Layout */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .header-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 4rem;
+      height: 4rem;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, #6366f1, #3b82f6);
+      margin-bottom: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+    }
+
+    .header-logo svg {
+      width: 2.2rem;
+      height: 2.2rem;
+      fill: none;
+      stroke: white;
+      stroke-width: 2;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Steps navigation indicator */
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .step-dot {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .step-dot.completed {
+      color: var(--color-success);
+    }
+
+    .step-number {
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+      border: 2px solid var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+    }
+
+    .step-dot.active .step-number {
+      border-color: #6366f1;
+      background: #6366f1;
+      color: white;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+    }
+
+    .step-dot.completed .step-number {
+      border-color: var(--color-success);
+      background: var(--color-success);
+      color: white;
+    }
+
+    .step-connector {
+      flex-grow: 1;
+      height: 2px;
+      background: var(--card-border);
+      margin: 0 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .step-connector.completed {
+      background: var(--color-success);
+    }
+
+    /* Main Workspace & Stage Panels */
+    .workspace {
+      flex-grow: 1;
+      position: relative;
+      min-height: 500px;
+    }
+
+    .stage-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .stage-panel.active {
+      position: relative;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Glassmorphism Card Wrapper */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .card h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-description {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    /* Bags & Shuffling Visuals */
+    .bags-display {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 2rem;
+      margin: 2rem 0;
+      min-height: 260px;
+      position: relative;
+    }
+
+    .bag-wrapper {
+      position: relative;
+      width: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .bag-label {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-top: 1rem;
+      color: var(--text-main);
+      background: rgba(30, 41, 59, 0.8);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      transition: all 0.3s ease;
+    }
+
+    .bag-interactive {
+      position: relative;
+      width: 180px;
+      height: 220px;
+      cursor: pointer;
+    }
+
+    .bag-svg-container {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.3s ease;
+    }
+
+    .bag-interactive:hover .bag-svg-container {
+      transform: scale(1.05);
+    }
+
+    .bag-svg-body {
+      fill: rgba(30, 41, 59, 0.45);
+      stroke: rgba(255, 255, 255, 0.25);
+      stroke-width: 3px;
+      transition: fill 0.8s ease, stroke 0.8s ease;
+    }
+
+    .bag-svg-neck {
+      fill: none;
+      stroke: #d97706;
+      stroke-width: 6;
+      transition: stroke-dasharray 0.5s ease;
+    }
+
+    .bag-svg-rope {
+      fill: none;
+      stroke: #f59e0b;
+      stroke-width: 3;
+      transition: opacity 0.5s ease;
+    }
+
+    .bag-svg-text {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      fill: var(--text-muted);
+      letter-spacing: 0.05em;
+      transition: fill 0.5s ease, opacity 0.5s ease;
+    }
+
+    /* Opaque Class applied during shuffling */
+    .bag-wrapper.opaque .bag-svg-body {
+      fill: #451a03;
+      stroke: #78350f;
+    }
+    
+    .bag-wrapper.opaque .bag-svg-text {
+      opacity: 0.15;
+    }
+
+    .bag-wrapper.highlighted {
+      transform: scale(1.1);
+      z-index: 10;
+    }
+
+    .bag-wrapper.highlighted .bag-svg-body {
+      stroke: #6366f1;
+      filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.4));
+    }
+
+    .bag-wrapper.faded {
+      opacity: 0.3;
+      transform: scale(0.9);
+      pointer-events: none;
+    }
+
+    /* Marbles Rendering inside Bags */
+    .marbles-layer {
+      position: absolute;
+      top: 55px;
+      left: 15px;
+      width: 150px;
+      height: 140px;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 0 0 70px 70px;
+    }
+
+    .marble {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transform: translateY(-150px);
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+    }
+
+    .marble::after {
+      content: '';
+      position: absolute;
+      top: 15%;
+      left: 15%;
+      width: 30%;
+      height: 30%;
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 50%;
+      filter: blur(0.3px);
+    }
+
+    .marble.red {
+      background: radial-gradient(circle at 35% 35%, #ff8a8a 0%, #ef4444 40%, #991b1b 100%);
+      box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.4), 0 0 8px var(--color-red-glow);
+    }
+
+    .marble.blue {
+      background: radial-gradient(circle at 35% 35%, #8ab4ff 0%, #3b82f6 40%, #1e40af 100%);
+      box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.4), 0 0 8px var(--color-blue-glow);
+    }
+
+    .marble.settled {
+      opacity: 1;
+    }
+
+    /* Draw Animation Overlay */
+    .draw-reveal-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem 0;
+      min-height: 160px;
+    }
+
+    .drawn-marble-spot {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px dashed var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: all 0.3s ease;
+      background: rgba(15, 23, 42, 0.4);
+    }
+
+    .drawn-marble {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      position: absolute;
+      z-index: 20;
+      opacity: 0;
+      transform: scale(0.2);
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .drawn-marble.reveal {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .drawn-marble::after {
+      content: '';
+      position: absolute;
+      top: 15%;
+      left: 15%;
+      width: 30%;
+      height: 30%;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      filter: blur(0.5px);
+    }
+
+    .drawn-marble.red {
+      background: radial-gradient(circle at 35% 35%, #ff8a8a 0%, #ef4444 40%, #991b1b 100%);
+      box-shadow: inset -4px -4px 10px rgba(0, 0, 0, 0.5), 0 0 25px var(--color-red-glow);
+    }
+
+    .drawn-marble.blue {
+      background: radial-gradient(circle at 35% 35%, #8ab4ff 0%, #3b82f6 40%, #1e40af 100%);
+      box-shadow: inset -4px -4px 10px rgba(0, 0, 0, 0.5), 0 0 25px var(--color-blue-glow);
+    }
+
+    .drawn-text {
+      font-size: 1.5rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      margin-top: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease;
+    }
+
+    .drawn-text.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Buttons & Controls */
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.8rem 1.8rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: rgba(51, 65, 85, 0.5);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(51, 65, 85, 0.8);
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+    }
+
+    .btn-success:hover {
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Options & Multiple Choice Panel */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .option-card {
+      background: rgba(30, 41, 59, 0.3);
+      border: 2px solid var(--card-border);
+      padding: 1.25rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      text-align: center;
+      font-size: 1.25rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      transition: all 0.25s ease;
+    }
+
+    .option-card:hover {
+      border-color: #6366f1;
+      background: rgba(99, 102, 241, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .option-card.selected {
+      border-color: #6366f1;
+      background: rgba(99, 102, 241, 0.15);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+    }
+
+    /* Explanations & Info Boxes */
+    .feedback-box {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      border-left: 4px solid transparent;
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .feedback-box.correct {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: var(--color-success);
+      display: block;
+    }
+
+    .feedback-box.incorrect {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--color-red);
+      display: block;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Mathematics Layout */
+    .math-breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .math-breakdown {
+        grid-template-columns: 1fr;
+      }
+      .bags-display {
+        flex-direction: column;
+        min-height: 480px;
+      }
+    }
+
+    .formula-card {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+    }
+
+    .formula-expression {
+      font-size: 1.4rem;
+      text-align: center;
+      margin: 1rem 0;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 0.5rem;
+      border-left: 3px solid #6366f1;
+      color: #e2e8f0;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .highlight-math {
+      color: #6366f1;
+      font-weight: bold;
+    }
+    
+    .highlight-red {
+      color: var(--color-red);
+      font-weight: bold;
+    }
+
+    .highlight-blue {
+      color: var(--color-blue);
+      font-weight: bold;
+    }
+
+    /* Probability Visual Scales */
+    .probability-gauge {
+      margin-top: 1rem;
+    }
+
+    .gauge-track {
+      height: 1.25rem;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+    }
+
+    .gauge-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+      width: 50%;
+      transition: width 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    }
+
+    .gauge-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Bayes Tree Visualization */
+    .bayes-tree-svg {
+      width: 100%;
+      height: 240px;
+      background: rgba(15, 23, 42, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+    }
+
+    .tree-node-circle {
+      fill: #1e293b;
+      stroke: var(--text-muted);
+      stroke-width: 2px;
+      transition: all 0.5s ease;
+    }
+
+    .tree-node-circle.active {
+      stroke: #6366f1;
+      fill: rgba(99, 102, 241, 0.2);
+    }
+
+    .tree-line {
+      stroke: var(--card-border);
+      stroke-width: 2px;
+      transition: stroke 0.5s ease, stroke-width 0.5s ease;
+    }
+
+    .tree-line.active {
+      stroke: #6366f1;
+      stroke-width: 3px;
+    }
+
+    .tree-line.active-red {
+      stroke: var(--color-red);
+      stroke-width: 4px;
+      filter: drop-shadow(0 0 4px var(--color-red-glow));
+    }
+
+    .tree-line.active-blue {
+      stroke: var(--color-blue);
+      stroke-width: 4px;
+      filter: drop-shadow(0 0 4px var(--color-blue-glow));
+    }
+
+    .tree-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      fill: var(--text-muted);
+      transition: fill 0.5s ease, font-weight 0.5s ease;
+    }
+
+    .tree-text.active {
+      fill: var(--text-main);
+      font-weight: 600;
+    }
+
+    .tree-text.active-red {
+      fill: #fca5a5;
+      font-weight: 700;
+    }
+
+    .tree-text.active-blue {
+      fill: #93c5fd;
+      font-weight: 700;
+    }
+
+    /* Sandbox Config Layout */
+    .sandbox-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .sandbox-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .config-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .config-card {
+      background: rgba(15, 23, 42, 0.3);
+      border: 1px solid var(--card-border);
+      padding: 1.25rem;
+      border-radius: 1rem;
+    }
+
+    .config-card h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .slider-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .slider-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .input-range {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+    }
+
+    .input-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #6366f1;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+      transition: transform 0.1s;
+    }
+
+    .input-range::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Sandbox Interactive Console */
+    .sandbox-console {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .console-dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--card-border);
+      padding: 1.25rem;
+      border-radius: 1rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      color: #6366f1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .log-panel {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--card-border);
+      padding: 1.25rem;
+      border-radius: 1rem;
+      max-height: 140px;
+      overflow-y: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .log-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    .log-item span.red {
+      color: var(--color-red);
+    }
+
+    .log-item span.blue {
+      color: var(--color-blue);
+    }
+
+    .chart-container {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--card-border);
+      padding: 1.25rem;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .history-canvas {
+      width: 100%;
+      height: 180px;
+      background: rgba(9, 13, 22, 0.5);
+      border-radius: 0.5rem;
+      border: 1px solid var(--card-border);
+    }
+
+    /* Helper utility classes & Keyframe animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animated {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      margin-top: 3rem;
+    }
+
+    footer a {
+      color: var(--text-main);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Main Header -->
+    <header>
+      <div class="header-logo">
+        <svg viewBox="0 0 24 24">
+          <!-- Pouch bag SVG icon -->
+          <path d="M 6,6 C 5,10 3,13 3,18 A 6,6 0 0,0 21,18 C 21,13 19,10 18,6 C 17,4 7,4 6,6 Z M 6,6 Q 12,8 18,6" />
+          <circle cx="12" cy="14" r="2.5" fill="white" />
+        </svg>
+      </div>
+      <h1>Bayes' Rule: The Marble Mystery</h1>
+      <p>Unravel the logic of probability. See how new evidence shapes our beliefs in real-time through an interactive visual journey.</p>
+    </header>
+
+    <!-- Stage Progress Indicator -->
+    <div class="stepper">
+      <div class="step-dot active" id="step-dot-1">
+        <div class="step-number">1</div>
+        <span>Setup</span>
+      </div>
+      <div class="step-connector" id="step-connector-1"></div>
+      
+      <div class="step-dot" id="step-dot-2">
+        <div class="step-number">2</div>
+        <span>Shuffle</span>
+      </div>
+      <div class="step-connector" id="step-connector-2"></div>
+      
+      <div class="step-dot" id="step-dot-3">
+        <div class="step-number">3</div>
+        <span>Prior Guess</span>
+      </div>
+      <div class="step-connector" id="step-connector-3"></div>
+      
+      <div class="step-dot" id="step-dot-4">
+        <div class="step-number">4</div>
+        <span>The Draw</span>
+      </div>
+      <div class="step-connector" id="step-connector-4"></div>
+      
+      <div class="step-dot" id="step-dot-5">
+        <div class="step-number">5</div>
+        <span>Bayes Reveal</span>
+      </div>
+      <div class="step-connector" id="step-connector-5"></div>
+      
+      <div class="step-dot" id="step-dot-6">
+        <div class="step-number">6</div>
+        <span>Sandbox</span>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="workspace">
+      
+      <!-- ================= STAGE 1: SETUP ================= -->
+      <section class="stage-panel active" id="stage-panel-1">
+        <div class="card">
+          <h2>1. Inspecting the Bags</h2>
+          <p class="card-description">We begin with two bags containing different distributions of red and blue marbles. Observe the clear difference in probabilities before we close them.</p>
+          
+          <div class="bags-display">
+            <!-- Bag A -->
+            <div class="bag-wrapper" id="setup-bag-a">
+              <div class="bag-interactive">
+                <svg class="bag-svg-container" viewBox="0 0 100 120">
+                  <path class="bag-svg-body" d="M 30,30 C 25,45 15,60 15,85 A 35,35 0 0,0 85,85 C 85,60 75,45 70,30 Z" />
+                  <path class="bag-svg-neck" d="M 30,30 Q 50,38 70,30" />
+                  <path class="bag-svg-rope" d="M 50,34 C 45,45 35,50 35,55 M 50,34 C 55,45 65,50 65,55" />
+                  <text class="bag-svg-text" x="50" y="75" text-anchor="middle">BAG A</text>
+                </svg>
+                <div class="marbles-layer" id="marbles-setup-a"></div>
+              </div>
+              <div class="bag-label">Bag A</div>
+              <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.5rem;">
+                8 <span class="highlight-red">Red</span> &bull; 2 <span class="highlight-blue">Blue</span> (80% Red)
+              </div>
+            </div>
+
+            <!-- Bag B -->
+            <div class="bag-wrapper" id="setup-bag-b">
+              <div class="bag-interactive">
+                <svg class="bag-svg-container" viewBox="0 0 100 120">
+                  <path class="bag-svg-body" d="M 30,30 C 25,45 15,60 15,85 A 35,35 0 0,0 85,85 C 85,60 75,45 70,30 Z" />
+                  <path class="bag-svg-neck" d="M 30,30 Q 50,38 70,30" />
+                  <path class="bag-svg-rope" d="M 50,34 C 45,45 35,50 35,55 M 50,34 C 55,45 65,50 65,55" />
+                  <text class="bag-svg-text" x="50" y="75" text-anchor="middle">Bag B</text>
+                </svg>
+                <div class="marbles-layer" id="marbles-setup-b"></div>
+              </div>
+              <div class="bag-label">Bag B</div>
+              <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.5rem;">
+                3 <span class="highlight-red">Red</span> &bull; 7 <span class="highlight-blue">Blue</span> (30% Red)
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" id="btn-fill-bags">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              Fill Bags with Marbles
+            </button>
+            <button class="btn btn-secondary" id="btn-to-stage2" disabled>Next: Shuffle Bags</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STAGE 2: SHUFFLE ================= -->
+      <section class="stage-panel" id="stage-panel-2">
+        <div class="card">
+          <h2>2. Shuffling the Bags</h2>
+          <p class="card-description">We now zip the bags closed, hide their labels, and mix their positions. You will no longer know which one is Bag A and which is Bag B.</p>
+          
+          <div class="bags-display" id="shuffle-track" style="position: relative;">
+            <!-- Bag 1 -->
+            <div class="bag-wrapper opaque" id="shuffle-bag-1" style="position: absolute; left: calc(25% - 120px); transition: left 0.5s ease, transform 0.2s ease;">
+              <div class="bag-interactive">
+                <svg class="bag-svg-container" viewBox="0 0 100 120">
+                  <path class="bag-svg-body" d="M 30,30 C 25,45 15,60 15,85 A 35,35 0 0,0 85,85 C 85,60 75,45 70,30 Z" />
+                  <path class="bag-svg-neck" d="M 30,30 Q 50,33 70,30" />
+                  <path class="bag-svg-rope" d="M 50,32 C 48,38 42,40 42,45 M 50,32 C 52,38 58,40 58,45" />
+                  <text class="bag-svg-text" x="50" y="75" text-anchor="middle">?</text>
+                </svg>
+              </div>
+              <div class="bag-label" id="label-bag-1">Bag ?</div>
+            </div>
+
+            <!-- Bag 2 -->
+            <div class="bag-wrapper opaque" id="shuffle-bag-2" style="position: absolute; left: calc(75% - 120px); transition: left 0.5s ease, transform 0.2s ease;">
+              <div class="bag-interactive">
+                <svg class="bag-svg-container" viewBox="0 0 100 120">
+                  <path class="bag-svg-body" d="M 30,30 C 25,45 15,60 15,85 A 35,35 0 0,0 85,85 C 85,60 75,45 70,30 Z" />
+                  <path class="bag-svg-neck" d="M 30,30 Q 50,33 70,30" />
+                  <path class="bag-svg-rope" d="M 50,32 C 48,38 42,40 42,45 M 50,32 C 52,38 58,40 58,45" />
+                  <text class="bag-svg-text" x="50" y="75" text-anchor="middle">?</text>
+                </svg>
+              </div>
+              <div class="bag-label" id="label-bag-2">Bag ?</div>
+            </div>
+          </div>
+
+          <div class="btn-group" style="margin-top: 4rem;">
+            <button class="btn btn-primary" id="btn-shuffle">Shuffle Bags</button>
+            <button class="btn btn-secondary" id="btn-to-stage3" disabled>Next: Guess Prior</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STAGE 3: PRIOR PROBABILITY ================= -->
+      <section class="stage-panel" id="stage-panel-3">
+        <div class="card">
+          <h2>3. The Prior Probability Guess</h2>
+          <p class="card-description">We select one of the two bags at random and place it in front of you. What is the probability that this specific bag is Bag A?</p>
+          
+          <div class="bags-display">
+            <!-- Center Selected Bag -->
+            <div class="bag-wrapper opaque highlighted" id="prior-chosen-bag">
+              <div class="bag-interactive">
+                <svg class="bag-svg-container" viewBox="0 0 100 120">
+                  <path class="bag-svg-body" d="M 30,30 C 25,45 15,60 15,85 A 35,35 0 0,0 85,85 C 85,60 75,45 70,30 Z" />
+                  <path class="bag-svg-neck" d="M 30,30 Q 50,33 70,30" />
+                  <path class="bag-svg-rope" d="M 50,32 C 48,38 42,40 42,45 M 50,32 C 52,38 58,40 58,45" />
+                  <text class="bag-svg-text" x="50" y="75" text-anchor="middle">?</text>
+                </svg>
+              </div>
+              <div class="bag-label">Chosen Bag</div>
+            </div>
+          </div>
+
+          <div class="options-container" style="max-width: 600px; margin: 0 auto;">
+            <p style="text-align:center; font-weight:600; margin-bottom:1rem;">Your Guess for P(Bag A):</p>
+            <div class="options-grid">
+              <div class="option-card" data-guess="80">80% Likely</div>
+              <div class="option-card" data-guess="50">50% (Equally Likely)</div>
+              <div class="option-card" data-guess="30">30% Likely</div>
+            </div>
+
+            <!-- Interactive feedback -->
+            <div class="feedback-box" id="prior-feedback">
+              <div class="explanation-title" id="prior-feedback-title"></div>
+              <p id="prior-feedback-text"></p>
+            </div>
+
+            <div class="btn-group" style="margin-top:1.5rem;">
+              <button class="btn btn-primary" id="btn-to-stage4" disabled>Next: Draw a Marble</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STAGE 4: DRAW A MARBLE ================= -->
+      <section class="stage-panel" id="stage-panel-4">
+        <div class="card">
+          <h2>4. Draw a Marble</h2>
+          <p class="card-description">Now let's collect evidence. Click the chosen bag to reach in and draw a random marble!</p>
+          
+          <div class="bags-display" style="min-height: 200px; margin: 1rem 0;">
+            <div class="bag-wrapper opaque highlighted" id="draw-chosen-bag" style="cursor: pointer;">
+              <div class="bag-interactive" id="btn-draw-marble">
+                <svg class="bag-svg-container" viewBox="0 0 100 120">
+                  <path class="bag-svg-body" d="M 30,30 C 25,45 15,60 15,85 A 35,35 0 0,0 85,85 C 85,60 75,45 70,30 Z" />
+                  <path class="bag-svg-neck" d="M 30,30 Q 50,33 70,30" />
+                  <path class="bag-svg-rope" d="M 50,32 C 48,38 42,40 42,45 M 50,32 C 52,38 58,40 58,45" />
+                  <text class="bag-svg-text" x="50" y="75" text-anchor="middle">?</text>
+                </svg>
+              </div>
+              <div class="bag-label">Draw from here</div>
+            </div>
+          </div>
+
+          <div class="draw-reveal-container">
+            <div class="drawn-marble-spot">
+              <div class="drawn-marble" id="drawn-marble-visual"></div>
+            </div>
+            <div class="drawn-text" id="drawn-marble-text">Drawing...</div>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" id="btn-to-stage5" disabled>Next: Bayes Reveal</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STAGE 5: BAYES REVEAL ================= -->
+      <section class="stage-panel" id="stage-panel-5">
+        <div class="card">
+          <h2>5. The Bayesian Update</h2>
+          <p class="card-description">Let's see how our drawing of a marble changes the probability that this is Bag A. We apply Bayes' Rule directly to update our belief.</p>
+          
+          <div style="display:flex; justify-content:center; align-items:center; gap: 2rem; margin-bottom:1.5rem; flex-wrap: wrap;">
+            <div style="text-align:center;">
+              <span style="color:var(--text-muted); font-size:0.9rem;">DRAWN EVIDENCE</span>
+              <div class="drawn-marble-spot" style="width: 60px; height: 60px; margin: 0.5rem auto;">
+                <div class="drawn-marble reveal" id="bayes-evidence-marble" style="width:48px; height:48px;"></div>
+              </div>
+            </div>
+            
+            <div style="flex-grow:1; max-width:400px;">
+              <span style="color:var(--text-muted); font-size:0.9rem;">BELIEF IN BAG A:</span>
+              <div class="stat-value" id="posterior-probability-val">50.00%</div>
+              <div class="probability-gauge">
+                <div class="gauge-track"><div class="gauge-fill" id="posterior-gauge-fill"></div></div>
+                <div class="gauge-labels">
+                  <span>Bag B (0%)</span>
+                  <span>Prior (50%)</span>
+                  <span>Bag A (100%)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Choice / Input before showing math -->
+          <div id="guess-posterior-section" style="max-width: 600px; margin: 0 auto 2rem auto; text-align: center;">
+            <p style="font-weight:600; margin-bottom:1rem;">Given the marble you drew, what do you think is the updated probability that the bag is Bag A?</p>
+            <div class="options-grid" id="posterior-options-grid">
+              <!-- Dynamically populated options based on draw color -->
+            </div>
+            <div class="feedback-box" id="posterior-feedback">
+              <div class="explanation-title" id="posterior-feedback-title"></div>
+              <p id="posterior-feedback-text"></p>
+            </div>
+          </div>
+
+          <!-- Mathematical Explanation Panel -->
+          <div class="math-breakdown animated" id="bayes-math-panel" style="display:none;">
+            <!-- Formula -->
+            <div class="formula-card">
+              <h3>Bayes' Theorem Formula</h3>
+              <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">We calculate the posterior probability P(Bag A | Evidence):</p>
+              <div class="formula-expression" id="bayes-formula-rendered">
+                P(A | D) = P(D | A) &bull; P(A) / P(D)
+              </div>
+              <ul style="list-style-type:none; font-size:0.85rem; color:var(--text-muted); display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem;">
+                <li>&bull; <span class="highlight-math">P(A)</span> = Prior probability of Bag A = <strong>0.50</strong></li>
+                <li>&bull; <span class="highlight-math">P(D | A)</span> = Likelihood of marble given Bag A = <strong id="math-likelihood-a">0.80</strong></li>
+                <li>&bull; <span class="highlight-math">P(D | B)</span> = Likelihood of marble given Bag B = <strong id="math-likelihood-b">0.30</strong></li>
+                <li>&bull; <span class="highlight-math">P(D)</span> = Total probability of drawing this marble = <strong id="math-total-d">0.55</strong></li>
+              </ul>
+              <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--card-border);">
+                <p style="font-size:0.95rem; font-weight:600;">Calculation Breakdown:</p>
+                <div class="formula-expression" id="bayes-calculation-steps" style="font-size:1.1rem; border-left-color: var(--color-success);">
+                  P(A|D) = (0.80 &bull; 0.50) / 0.55 = 72.73%
+                </div>
+              </div>
+            </div>
+
+            <!-- Diagram or visual explanation tree -->
+            <div>
+              <h3 style="margin-bottom:0.5rem;">Visual Probability Tree</h3>
+              <p class="card-description" style="margin-bottom:1rem;">The paths matching the drawn marble are highlighted, showing the proportion of paths belonging to Bag A.</p>
+              <svg class="bayes-tree-svg" id="bayes-tree-svg"></svg>
+            </div>
+          </div>
+
+          <div class="btn-group" style="margin-top: 2rem;">
+            <button class="btn btn-success" id="btn-reveal-bag">Open & Reveal Chosen Bag!</button>
+            <button class="btn btn-primary" id="btn-to-stage6" style="display:none;">Next: Sandbox Mode</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STAGE 6: SANDBOX ================= -->
+      <section class="stage-panel" id="stage-panel-6">
+        <div class="card">
+          <h2>6. Sandbox & Sequential Draw Simulator</h2>
+          <p class="card-description">Configure your own bag probabilities, shuffle them, and draw consecutive marbles (with replacement) to see how Bayes' Rule accumulates evidence to update beliefs in real-time!</p>
+          
+          <div class="sandbox-container">
+            <!-- Left Side: Config Panel -->
+            <div class="config-panel">
+              <div class="config-card">
+                <h4>Bag A Config <span class="highlight-indigo" id="config-a-stats">8R / 2B</span></h4>
+                <div class="slider-row">
+                  <div class="slider-info">
+                    <span>Red Marbles</span>
+                    <span id="label-config-a-red">8</span>
+                  </div>
+                  <input type="range" class="input-range" id="slider-config-a-red" min="0" max="10" value="8">
+                </div>
+                <div class="slider-row">
+                  <div class="slider-info">
+                    <span>Blue Marbles</span>
+                    <span id="label-config-a-blue">2</span>
+                  </div>
+                  <input type="range" class="input-range" id="slider-config-a-blue" min="0" max="10" value="2">
+                </div>
+              </div>
+
+              <div class="config-card">
+                <h4>Bag B Config <span class="highlight-indigo" id="config-b-stats">3R / 7B</span></h4>
+                <div class="slider-row">
+                  <div class="slider-info">
+                    <span>Red Marbles</span>
+                    <span id="label-config-b-red">3</span>
+                  </div>
+                  <input type="range" class="input-range" id="slider-config-b-red" min="0" max="10" value="3">
+                </div>
+                <div class="slider-row">
+                  <div class="slider-info">
+                    <span>Blue Marbles</span>
+                    <span id="label-config-b-blue">7</span>
+                  </div>
+                  <input type="range" class="input-range" id="slider-config-b-blue" min="0" max="10" value="7">
+                </div>
+              </div>
+              
+              <button class="btn btn-primary" id="btn-sandbox-restart" style="width:100%;">Shuffle & Start New Game</button>
+            </div>
+
+            <!-- Right Side: Sandbox Console -->
+            <div class="sandbox-console">
+              <div class="console-dashboard">
+                <div class="stat-card">
+                  <div class="stat-value" id="sandbox-belief-val">50.0%</div>
+                  <div class="stat-label">P(Bag A | Draws)</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value" id="sandbox-draws-count">0</div>
+                  <div class="stat-label">Total Draws</div>
+                </div>
+                <div class="stat-card" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                  <button class="btn btn-secondary" id="btn-sandbox-draw" style="padding: 0.6rem 1.2rem; width:100%;">Draw Marble</button>
+                  <button class="btn btn-success" id="btn-sandbox-reveal" style="padding: 0.6rem 1.2rem; width:100%; margin-top:0.5rem;">Reveal Bag</button>
+                </div>
+              </div>
+
+              <!-- History Chart -->
+              <div class="chart-container">
+                <h4 style="font-size:0.95rem;">Bayesian Probability History Chart</h4>
+                <canvas class="history-canvas" id="sandbox-canvas"></canvas>
+              </div>
+
+              <!-- History Log -->
+              <div class="log-panel" id="sandbox-log">
+                <div class="log-item">Console Ready. Click 'Draw Marble' to begin simulating draws.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2026 Bayes' Rule Gamified Interactive | Pair Programming with <a href="#">Antigravity AI</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // State Management Object
+    const state = {
+      currentStage: 1,
+      bagA: { red: 8, blue: 2 },
+      bagB: { red: 3, blue: 7 },
+      secretBag: 'A', // Secretly 'A' or 'B'
+      secretBagIndex: 0, // 0 for left, 1 for right during shuffle
+      shuffled: false,
+      priorGuess: null,
+      drawnColor: null,
+      posteriorGuess: null,
+      revealed: false,
+      
+      // Sandbox Mode Variables
+      sandboxActive: false,
+      sandboxBagA: { red: 8, blue: 2 },
+      sandboxBagB: { red: 3, blue: 7 },
+      sandboxSecretBag: 'A',
+      sandboxRevealed: false,
+      sandboxHistory: [50.0], // Initial probability prior is 50%
+      sandboxDraws: [] // List of drawn colors
+    };
+
+    // DOM Elements Cache
+    const el = {
+      stepper: {
+        dots: [
+          document.getElementById('step-dot-1'),
+          document.getElementById('step-dot-2'),
+          document.getElementById('step-dot-3'),
+          document.getElementById('step-dot-4'),
+          document.getElementById('step-dot-5'),
+          document.getElementById('step-dot-6')
+        ],
+        connectors: [
+          document.getElementById('step-connector-1'),
+          document.getElementById('step-connector-2'),
+          document.getElementById('step-connector-3'),
+          document.getElementById('step-connector-4'),
+          document.getElementById('step-connector-5')
+        ]
+      },
+      panels: [
+        document.getElementById('stage-panel-1'),
+        document.getElementById('stage-panel-2'),
+        document.getElementById('stage-panel-3'),
+        document.getElementById('stage-panel-4'),
+        document.getElementById('stage-panel-5'),
+        document.getElementById('stage-panel-6')
+      ],
+      
+      // Stage 1 Elements
+      btnFillBags: document.getElementById('btn-fill-bags'),
+      btnToStage2: document.getElementById('btn-to-stage2'),
+      marblesSetupA: document.getElementById('marbles-setup-a'),
+      marblesSetupB: document.getElementById('marbles-setup-b'),
+      
+      // Stage 2 Elements
+      btnShuffle: document.getElementById('btn-shuffle'),
+      btnToStage3: document.getElementById('btn-to-stage3'),
+      shuffleBag1: document.getElementById('shuffle-bag-1'),
+      shuffleBag2: document.getElementById('shuffle-bag-2'),
+      labelBag1: document.getElementById('label-bag-1'),
+      labelBag2: document.getElementById('label-bag-2'),
+      
+      // Stage 3 Elements
+      priorOptionCards: document.querySelectorAll('#stage-panel-3 .option-card'),
+      priorFeedback: document.getElementById('prior-feedback'),
+      priorFeedbackTitle: document.getElementById('prior-feedback-title'),
+      priorFeedbackText: document.getElementById('prior-feedback-text'),
+      btnToStage4: document.getElementById('btn-to-stage4'),
+      
+      // Stage 4 Elements
+      btnDrawMarble: document.getElementById('btn-draw-marble'),
+      drawnMarbleVisual: document.getElementById('drawn-marble-visual'),
+      drawnMarbleText: document.getElementById('drawn-marble-text'),
+      btnToStage5: document.getElementById('btn-to-stage5'),
+      
+      // Stage 5 Elements
+      bayesEvidenceMarble: document.getElementById('bayes-evidence-marble'),
+      posteriorProbabilityVal: document.getElementById('posterior-probability-val'),
+      posteriorGaugeFill: document.getElementById('posterior-gauge-fill'),
+      posteriorOptionsGrid: document.getElementById('posterior-options-grid'),
+      posteriorFeedback: document.getElementById('posterior-feedback'),
+      posteriorFeedbackTitle: document.getElementById('posterior-feedback-title'),
+      posteriorFeedbackText: document.getElementById('posterior-feedback-text'),
+      bayesMathPanel: document.getElementById('bayes-math-panel'),
+      mathLikelihoodA: document.getElementById('math-likelihood-a'),
+      mathLikelihoodB: document.getElementById('math-likelihood-b'),
+      mathTotalD: document.getElementById('math-total-d'),
+      bayesCalculationSteps: document.getElementById('bayes-calculation-steps'),
+      bayesTreeSvg: document.getElementById('bayes-tree-svg'),
+      btnRevealBag: document.getElementById('btn-reveal-bag'),
+      btnToStage6: document.getElementById('btn-to-stage6'),
+      
+      // Stage 6 (Sandbox) Elements
+      sliderA: {
+        red: document.getElementById('slider-config-a-red'),
+        blue: document.getElementById('slider-config-a-blue'),
+        labelRed: document.getElementById('label-config-a-red'),
+        labelBlue: document.getElementById('label-config-a-blue'),
+        stats: document.getElementById('config-a-stats')
+      },
+      sliderB: {
+        red: document.getElementById('slider-config-b-red'),
+        blue: document.getElementById('slider-config-b-blue'),
+        labelRed: document.getElementById('label-config-b-red'),
+        labelBlue: document.getElementById('label-config-b-blue'),
+        stats: document.getElementById('config-b-stats')
+      },
+      btnSandboxRestart: document.getElementById('btn-sandbox-restart'),
+      btnSandboxDraw: document.getElementById('btn-sandbox-draw'),
+      btnSandboxReveal: document.getElementById('btn-sandbox-reveal'),
+      sandboxBeliefVal: document.getElementById('sandbox-belief-val'),
+      sandboxDrawsCount: document.getElementById('sandbox-draws-count'),
+      sandboxLog: document.getElementById('sandbox-log'),
+      sandboxCanvas: document.getElementById('sandbox-canvas')
+    };
+
+    // Canvas Drawing Context for Chart
+    const ctx = el.sandboxCanvas.getContext('2d');
+
+    // Navigation and Stage Stepper Handler
+    function setStage(stageNum) {
+      if (stageNum < 1 || stageNum > 6) return;
+      state.currentStage = stageNum;
+      
+      // Update panels active class
+      el.panels.forEach((panel, idx) => {
+        if (idx + 1 === stageNum) {
+          panel.classList.add('active');
+        } else {
+          panel.classList.remove('active');
+        }
+      });
+
+      // Update stepper visuals
+      el.stepper.dots.forEach((dot, idx) => {
+        const num = idx + 1;
+        dot.classList.remove('active', 'completed');
+        if (num === stageNum) {
+          dot.classList.add('active');
+        } else if (num < stageNum) {
+          dot.classList.add('completed');
+        }
+      });
+
+      el.stepper.connectors.forEach((connector, idx) => {
+        const num = idx + 1;
+        connector.classList.remove('completed');
+        if (num < stageNum) {
+          connector.classList.add('completed');
+        }
+      });
+
+      // Perform stage-specific initialization if necessary
+      if (stageNum === 5) {
+        initStage5();
+      } else if (stageNum === 6) {
+        initSandboxMode();
+      }
+    }
+
+    // Helper: Generate Random Number between range
+    function randomRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // Generate Visual Marbles Inside Bag Layers
+    function populateBagMarbles(container, bagData) {
+      container.innerHTML = '';
+      const total = bagData.red + bagData.blue;
+      let count = 0;
+      
+      const redCount = bagData.red;
+      const blueCount = bagData.blue;
+      
+      // Let's create an array representing marbles
+      const marbleList = [];
+      for (let i = 0; i < redCount; i++) marbleList.push('red');
+      for (let i = 0; i < blueCount; i++) marbleList.push('blue');
+      
+      // Shuffle marble array so they fall in a random mixed way
+      marbleList.sort(() => Math.random() - 0.5);
+
+      marbleList.forEach((color, idx) => {
+        const marble = document.createElement('div');
+        marble.className = `marble ${color}`;
+        
+        // Random placement inside the bottom bag curve (radius approx 60px)
+        const angle = randomRange(Math.PI * 0.15, Math.PI * 0.85); // bottom half angle
+        const radius = randomRange(10, 50);
+        
+        // Translate polar coords to container relative
+        // Center of marble container is around (75, 75)
+        const x = 75 + radius * Math.cos(angle) - 11;
+        const y = 70 + radius * Math.sin(angle) - 11;
+        
+        marble.style.left = `${x}px`;
+        marble.style.top = `${y}px`;
+        
+        container.appendChild(marble);
+        
+        // Staggered drop animation
+        setTimeout(() => {
+          marble.classList.add('settled');
+          marble.style.transform = 'translateY(0)';
+        }, idx * 100);
+      });
+    }
+
+    // Setup Stage Action
+    el.btnFillBags.addEventListener('click', () => {
+      populateBagMarbles(el.marblesSetupA, state.bagA);
+      populateBagMarbles(el.marblesSetupB, state.bagB);
+      el.btnFillBags.disabled = true;
+      
+      // Wait for all marble animations to complete (10 * 100ms = 1000ms + transition)
+      setTimeout(() => {
+        el.btnToStage2.disabled = false;
+        el.btnToStage2.classList.remove('btn-secondary');
+        el.btnToStage2.classList.add('btn-primary');
+      }, 1500);
+    });
+
+    el.btnToStage2.addEventListener('click', () => setStage(2));
+
+    // Shuffle Stage Action
+    el.btnShuffle.addEventListener('click', () => {
+      el.btnShuffle.disabled = true;
+      
+      // Determine secret bag identity
+      state.secretBag = Math.random() < 0.5 ? 'A' : 'B';
+      
+      // Randomize initial location: left (idx 0) or right (idx 1)
+      state.secretBagIndex = Math.random() < 0.5 ? 0 : 1;
+      
+      let swaps = 5;
+      let interval = 550; // ms
+      let isSwapped = false;
+      
+      const posLeft = "calc(25% - 120px)";
+      const posRight = "calc(75% - 120px)";
+      
+      const leftBagEl = el.shuffleBag1;
+      const rightBagEl = el.shuffleBag2;
+      
+      // Setup dynamic transitions for shuffle
+      leftBagEl.style.transition = 'left 0.48s cubic-bezier(0.4, 0, 0.2, 1), transform 0.48s cubic-bezier(0.4, 0, 0.2, 1)';
+      rightBagEl.style.transition = 'left 0.48s cubic-bezier(0.4, 0, 0.2, 1), transform 0.48s cubic-bezier(0.4, 0, 0.2, 1)';
+      
+      const swapInterval = setInterval(() => {
+        if (swaps <= 0) {
+          clearInterval(swapInterval);
+          
+          // Re-adjust classes/labels
+          el.labelBag1.textContent = "Bag ?";
+          el.labelBag2.textContent = "Bag ?";
+          
+          // Reset transforms
+          leftBagEl.style.transform = 'none';
+          rightBagEl.style.transform = 'none';
+          
+          // Enable continue
+          el.btnToStage3.disabled = false;
+          el.btnToStage3.classList.remove('btn-secondary');
+          el.btnToStage3.classList.add('btn-primary');
+          return;
+        }
+        
+        isSwapped = !isSwapped;
+        
+        // Swap left values
+        leftBagEl.style.left = isSwapped ? posRight : posLeft;
+        rightBagEl.style.left = isSwapped ? posLeft : posRight;
+        
+        // Adjust vertically to give circular motion
+        leftBagEl.style.transform = isSwapped ? 'translateY(-25px) scale(0.98)' : 'translateY(25px) scale(1.02)';
+        rightBagEl.style.transform = isSwapped ? 'translateY(25px) scale(1.02)' : 'translateY(-25px) scale(0.98)';
+        
+        swaps--;
+      }, interval);
+    });
+
+    el.btnToStage3.addEventListener('click', () => setStage(3));
+
+    // Stage 3 Option cards click
+    el.priorOptionCards.forEach(card => {
+      card.addEventListener('click', () => {
+        el.priorOptionCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        
+        const guessVal = parseInt(card.getAttribute('data-guess'));
+        state.priorGuess = guessVal;
+        
+        // Evaluate Guess
+        const feedback = el.priorFeedback;
+        feedback.className = "feedback-box"; // reset
+        
+        if (guessVal === 50) {
+          feedback.classList.add('correct');
+          el.priorFeedbackTitle.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Spot On!`;
+          el.priorFeedbackText.textContent = "Before seeing any evidence (like drawing a marble), there is an equal 1-in-2 chance of this bag being Bag A. This 50% value is the Prior Probability, P(Bag A) = 0.50.";
+        } else {
+          feedback.classList.add('incorrect');
+          el.priorFeedbackTitle.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg> Not quite, but let's see why!`;
+          el.priorFeedbackText.textContent = "Since the bags were shuffled randomly and you have no other information yet, the probability is exactly 50%. This is the initial P(Bag A) = 0.50, representing your belief before receiving evidence.";
+        }
+        
+        el.btnToStage4.disabled = false;
+      });
+    });
+
+    el.btnToStage4.addEventListener('click', () => setStage(4));
+
+    // Stage 4 Draw marble click
+    el.btnDrawMarble.addEventListener('click', () => {
+      // Prevent multiple clicks
+      if (state.drawnColor) return;
+      
+      el.drawnMarbleText.textContent = "Reaching in...";
+      el.drawnMarbleText.classList.add('show');
+      
+      // Simulate drawing probability
+      // Bag A: 8 Red, 2 Blue -> P(Red|Bag A) = 0.8
+      // Bag B: 3 Red, 7 Blue -> P(Red|Bag B) = 0.3
+      const threshold = state.secretBag === 'A' ? 0.8 : 0.3;
+      state.drawnColor = Math.random() < threshold ? 'red' : 'blue';
+      
+      // Animate marble drawn
+      setTimeout(() => {
+        el.drawnMarbleVisual.className = `drawn-marble ${state.drawnColor} reveal`;
+        el.drawnMarbleText.innerHTML = `You drew a <span class="highlight-${state.drawnColor}">${state.drawnColor.toUpperCase()}</span> marble!`;
+        
+        el.btnToStage5.disabled = false;
+        el.btnToStage5.classList.remove('btn-secondary');
+        el.btnToStage5.classList.add('btn-primary');
+      }, 1000);
+    });
+
+    el.btnToStage5.addEventListener('click', () => setStage(5));
+
+    // Stage 5 Initialization (Posterior Bayes Reveal)
+    function initStage5() {
+      // Display drawn marble
+      el.bayesEvidenceMarble.className = `drawn-marble ${state.drawnColor} reveal`;
+      
+      // Calculate Bayes Values
+      // P(A) = 0.5
+      // P(Red|A) = 0.8, P(Blue|A) = 0.2
+      // P(Red|B) = 0.3, P(Blue|B) = 0.7
+      const priorA = 0.5;
+      const priorB = 0.5;
+      const likelihoodA = state.drawnColor === 'red' ? 0.8 : 0.2;
+      const likelihoodB = state.drawnColor === 'red' ? 0.3 : 0.7;
+      
+      const totalEvidence = (likelihoodA * priorA) + (likelihoodB * priorB);
+      const posteriorA = (likelihoodA * priorA) / totalEvidence;
+      const percentage = (posteriorA * 100).toFixed(2);
+      
+      // Fill options grid for posterior guess dynamically
+      el.posteriorOptionsGrid.innerHTML = '';
+      
+      const options = [];
+      if (state.drawnColor === 'red') {
+        options.push({ val: 30, text: '30% Likely' });
+        options.push({ val: 50, text: '50% (No Change)' });
+        options.push({ val: 73, text: '72.73% Likely' });
+      } else {
+        options.push({ val: 22, text: '22.22% Likely' });
+        options.push({ val: 50, text: '50% (No Change)' });
+        options.push({ val: 80, text: '80% Likely' });
+      }
+      
+      options.forEach(opt => {
+        const card = document.createElement('div');
+        card.className = 'option-card';
+        card.textContent = opt.text;
+        card.setAttribute('data-guess', opt.val);
+        card.addEventListener('click', () => selectPosteriorGuess(opt.val, percentage, likelihoodA, likelihoodB, totalEvidence));
+        el.posteriorOptionsGrid.appendChild(card);
+      });
+    }
+
+    function selectPosteriorGuess(guessVal, truePercent, lA, lB, totalD) {
+      const cards = el.posteriorOptionsGrid.querySelectorAll('.option-card');
+      cards.forEach(c => c.classList.remove('selected'));
+      
+      // Highlight selection
+      const selectedCard = Array.from(cards).find(c => parseInt(c.getAttribute('data-guess')) === guessVal);
+      if (selectedCard) selectedCard.classList.add('selected');
+      
+      state.posteriorGuess = guessVal;
+      
+      // Show feedback
+      const feedback = el.posteriorFeedback;
+      feedback.className = "feedback-box"; // reset
+      
+      const isCorrect = (state.drawnColor === 'red' && guessVal === 73) || (state.drawnColor === 'blue' && guessVal === 22);
+      
+      if (isCorrect) {
+        feedback.classList.add('correct');
+        el.posteriorFeedbackTitle.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Brilliant! You solved it!`;
+        el.posteriorFeedbackText.textContent = `A ${state.drawnColor} marble is much more support for Bag ${state.drawnColor === 'red' ? 'A' : 'B'}. Our probability of this bag being Bag A scales accordingly to ${truePercent}%.`;
+      } else {
+        feedback.classList.add('incorrect');
+        el.posteriorFeedbackTitle.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Let's analyze the math...`;
+        el.posteriorFeedbackText.textContent = `The actual probability of the bag being Bag A shifts from 50% to precisely ${truePercent}%. Let's look at the formula details below to see why!`;
+      }
+      
+      // Reveal math breakdowns
+      el.bayesMathPanel.style.display = 'grid';
+      
+      // Update math formulas
+      el.mathLikelihoodA.textContent = lA.toFixed(2);
+      el.mathLikelihoodB.textContent = lB.toFixed(2);
+      el.mathTotalD.textContent = totalD.toFixed(2);
+      
+      const marbleUp = state.drawnColor.toUpperCase();
+      el.bayesFormulaRendered.innerHTML = `P(Bag A | ${marbleUp}) = P(${marbleUp} | Bag A) &bull; P(Bag A) / P(${marbleUp})`;
+      el.bayesCalculationSteps.innerHTML = `P(Bag A | ${marbleUp}) = (${lA.toFixed(2)} &bull; 0.50) / ${totalD.toFixed(2)} = <strong>${truePercent}%</strong>`;
+      
+      // Animate posterior values
+      el.posteriorProbabilityVal.textContent = `${truePercent}%`;
+      el.posteriorGaugeFill.style.width = `${truePercent}%`;
+      
+      // Draw interactive SVG Bayes tree diagram
+      drawBayesTree(state.drawnColor, lA, lB);
+    }
+
+    // Render interactive probability path tree
+    function drawBayesTree(color, lA, lB) {
+      const svg = el.bayesTreeSvg;
+      svg.innerHTML = ''; // clear
+      
+      const isRed = color === 'red';
+      
+      // Coordinates of nodes
+      const root = { x: 50, y: 30 };
+      const leftNode = { x: 25, y: 110 };
+      const rightNode = { x: 75, y: 110 };
+      
+      const leafA_Red = { x: 15, y: 200 };
+      const leafA_Blue = { x: 35, y: 200 };
+      const leafB_Red = { x: 65, y: 200 };
+      const leafB_Blue = { x: 85, y: 200 };
+      
+      function renderLine(x1, y1, x2, y2, activeState) {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', `${x1}%`);
+        line.setAttribute('y1', `${y1}`);
+        line.setAttribute('x2', `${x2}%`);
+        line.setAttribute('y2', `${y2}`);
+        
+        let cls = 'tree-line';
+        if (activeState === 'red') cls += ' active-red';
+        else if (activeState === 'blue') cls += ' active-blue';
+        else if (activeState === true) cls += ' active';
+        
+        line.className.baseVal = cls;
+        svg.appendChild(line);
+      }
+      
+      // Main branches
+      renderLine(root.x, root.y, leftNode.x, leftNode.y, true);
+      renderLine(root.x, root.y, rightNode.x, rightNode.y, true);
+      
+      // Leaf branches
+      renderLine(leftNode.x, leftNode.y, leafA_Red.x, leafA_Red.y, isRed ? 'red' : false);
+      renderLine(leftNode.x, leftNode.y, leafA_Blue.x, leafA_Blue.y, !isRed ? 'blue' : false);
+      
+      renderLine(rightNode.x, rightNode.y, leafB_Red.x, leafB_Red.y, isRed ? 'red' : false);
+      renderLine(rightNode.x, rightNode.y, leafB_Blue.x, leafB_Blue.y, !isRed ? 'blue' : false);
+      
+      // Render text on paths (probabilities)
+      function renderText(x, y, txt, activeState) {
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', `${x}%`);
+        text.setAttribute('y', `${y}`);
+        text.setAttribute('text-anchor', 'middle');
+        
+        let cls = 'tree-text';
+        if (activeState === 'red') cls += ' active-red';
+        else if (activeState === 'blue') cls += ' active-blue';
+        else if (activeState === true) cls += ' active';
+        
+        text.className.baseVal = cls;
+        text.textContent = txt;
+        svg.appendChild(text);
+      }
+      
+      renderText(35, 75, "P(A) = 0.50", true);
+      renderText(65, 75, "P(B) = 0.50", true);
+      
+      renderText(14, 165, "P(Red|A)=0.80", isRed ? 'red' : false);
+      renderText(36, 165, "P(Blue|A)=0.20", !isRed ? 'blue' : false);
+      renderText(64, 165, "P(Red|B)=0.30", isRed ? 'red' : false);
+      renderText(86, 165, "P(Blue|B)=0.70", !isRed ? 'blue' : false);
+      
+      // Nodes (circles)
+      function renderNode(cx, cy, label, isActive) {
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', `${cx}%`);
+        circle.setAttribute('cy', `${cy}`);
+        circle.setAttribute('r', '15');
+        circle.className.baseVal = `tree-node-circle ${isActive ? 'active' : ''}`;
+        
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', `${cx}%`);
+        text.setAttribute('y', `${cy + 4}`);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('fill', '#f8fafc');
+        text.setAttribute('font-size', '10px');
+        text.setAttribute('font-weight', 'bold');
+        text.textContent = label;
+        
+        g.appendChild(circle);
+        g.appendChild(text);
+        svg.appendChild(g);
+      }
+      
+      renderNode(root.x, root.y, "Start", true);
+      renderNode(leftNode.x, leftNode.y, "Bag A", true);
+      renderNode(rightNode.x, rightNode.y, "Bag B", true);
+    }
+
+    // Reveal Bag identity click
+    el.btnRevealBag.addEventListener('click', () => {
+      state.revealed = true;
+      el.btnRevealBag.disabled = true;
+      
+      // Create a fancy reveal alert
+      const secret = state.secretBag;
+      
+      // Visual celebration
+      alert(`Mystery Solved! The secret bag was indeed: BAG ${secret}`);
+      
+      el.btnRevealBag.style.display = 'none';
+      el.btnToStage6.style.display = 'inline-flex';
+    });
+
+    el.btnToStage6.addEventListener('click', () => setStage(6));
+
+    // ================= STAGE 6: SANDBOX MODE =================
+    
+    // Sliders Config & Live Updates
+    function updateConfigLabels() {
+      // Bag A
+      const aRed = parseInt(el.sliderA.red.value);
+      const aBlue = parseInt(el.sliderA.blue.value);
+      const totalA = aRed + aBlue;
+      el.sliderA.labelRed.textContent = aRed;
+      el.sliderA.labelBlue.textContent = aBlue;
+      el.sliderA.stats.textContent = `${aRed}R / ${aBlue}B (${totalA > 0 ? (aRed/totalA*100).toFixed(0) : 0}% Red)`;
+      
+      // Bag B
+      const bRed = parseInt(el.sliderB.red.value);
+      const bBlue = parseInt(el.sliderB.blue.value);
+      const totalB = bRed + bBlue;
+      el.sliderB.labelRed.textContent = bRed;
+      el.sliderB.labelBlue.textContent = bBlue;
+      el.sliderB.stats.textContent = `${bRed}R / ${bBlue}B (${totalB > 0 ? (bRed/totalB*100).toFixed(0) : 0}% Red)`;
+      
+      state.sandboxBagA = { red: aRed, blue: aBlue };
+      state.sandboxBagB = { red: bRed, blue: bBlue };
+    }
+
+    [el.sliderA.red, el.sliderA.blue, el.sliderB.red, el.sliderB.blue].forEach(slider => {
+      slider.addEventListener('input', () => {
+        updateConfigLabels();
+      });
+    });
+
+    // Initialize Sandbox Mode
+    function initSandboxMode() {
+      state.sandboxActive = true;
+      updateConfigLabels();
+      resetSandboxGame();
+    }
+
+    function resetSandboxGame() {
+      console.log("[Sandbox] resetSandboxGame triggered.");
+      state.sandboxSecretBag = Math.random() < 0.5 ? 'A' : 'B';
+      state.sandboxRevealed = false;
+      state.sandboxHistory = [50.0];
+      state.sandboxDraws = [];
+      
+      el.sandboxDrawsCount.textContent = '0';
+      el.sandboxBeliefVal.textContent = '50.0%';
+      el.btnSandboxDraw.disabled = false;
+      el.btnSandboxReveal.disabled = false;
+      
+      el.sandboxLog.innerHTML = '<div class="log-item">Game started. A secret bag has been chosen randomly (50% Prior probability). Make consecutive draws!</div>';
+      
+      console.log("[Sandbox] New Secret Bag selected:", state.sandboxSecretBag);
+      drawSandboxChart();
+    }
+
+    el.btnSandboxRestart.addEventListener('click', resetSandboxGame);
+
+    // Perform a marble draw in Sandbox Mode (with replacement)
+    el.btnSandboxDraw.addEventListener('click', () => {
+      if (state.sandboxRevealed) return;
+      
+      const bag = state.sandboxSecretBag === 'A' ? state.sandboxBagA : state.sandboxBagB;
+      const totalMarbles = bag.red + bag.blue;
+      
+      if (totalMarbles === 0) {
+        alert("Bags cannot be completely empty to draw!");
+        return;
+      }
+      
+      const threshold = bag.red / totalMarbles;
+      const drawn = Math.random() < threshold ? 'red' : 'blue';
+      
+      state.sandboxDraws.push(drawn);
+      el.sandboxDrawsCount.textContent = state.sandboxDraws.length;
+      
+      // Calculate Sequential Bayesian Update
+      // P(A) at step k = (P(draw_k | A) * P_(k-1)(A)) / [ P(draw_k | A) * P_(k-1)(A) + P(draw_k | B) * P_(k-1)(B) ]
+      const prevProbA = state.sandboxHistory[state.sandboxHistory.length - 1] / 100;
+      const prevProbB = 1 - prevProbA;
+      
+      // Likelihoods for Bag A
+      const totalA = state.sandboxBagA.red + state.sandboxBagA.blue;
+      const lA = drawn === 'red' ? (state.sandboxBagA.red / totalA) : (state.sandboxBagA.blue / totalA);
+      
+      // Likelihoods for Bag B
+      const totalB = state.sandboxBagB.red + state.sandboxBagB.blue;
+      const lB = drawn === 'red' ? (state.sandboxBagB.red / totalB) : (state.sandboxBagB.blue / totalB);
+      
+      const numerator = lA * prevProbA;
+      const denominator = (lA * prevProbA) + (lB * prevProbB);
+      
+      let nextProbA = 0.5;
+      if (denominator > 0) {
+        nextProbA = numerator / denominator;
+      }
+      
+      const nextPercent = nextProbA * 100;
+      state.sandboxHistory.push(nextPercent);
+      
+      // Update UI displays
+      el.sandboxBeliefVal.textContent = `${nextPercent.toFixed(1)}%`;
+      
+      // Append Log Item
+      const logItem = document.createElement('div');
+      logItem.className = 'log-item';
+      const num = state.sandboxDraws.length;
+      const circleEmoji = drawn === 'red' ? '<span class="red">🔴 Red</span>' : '<span class="blue">🔵 Blue</span>';
+      logItem.innerHTML = `[Draw #${num}]: Drew ${circleEmoji} &rarr; P(Bag A) is now <strong>${nextPercent.toFixed(2)}%</strong>`;
+      el.sandboxLog.appendChild(logItem);
+      el.sandboxLog.scrollTop = el.sandboxLog.scrollHeight;
+      
+      // Redraw history chart
+      drawSandboxChart();
+    });
+
+    // Reveal actual bag in Sandbox Mode
+    el.btnSandboxReveal.addEventListener('click', () => {
+      state.sandboxRevealed = true;
+      el.btnSandboxDraw.disabled = true;
+      el.btnSandboxReveal.disabled = true;
+      
+      const actual = state.sandboxSecretBag;
+      const logItem = document.createElement('div');
+      logItem.className = 'log-item';
+      logItem.style.color = '#10b981';
+      logItem.style.fontWeight = 'bold';
+      logItem.innerHTML = `🏁 REVEAL: The secret bag was BAG ${actual}!`;
+      el.sandboxLog.appendChild(logItem);
+      el.sandboxLog.scrollTop = el.sandboxLog.scrollHeight;
+      
+      alert(`The secret bag is Bag ${actual}!`);
+    });
+
+    // Draw HTML5 Canvas line chart showing Bayesian updating curve
+    function drawSandboxChart() {
+      if (!ctx) {
+        console.error("[Sandbox] Canvas 2D context not initialized!");
+        return;
+      }
+      const width = el.sandboxCanvas.clientWidth;
+      const height = el.sandboxCanvas.clientHeight;
+      console.log("[Sandbox] drawSandboxChart: Dimensions =", width, "x", height);
+      el.sandboxCanvas.width = width;
+      el.sandboxCanvas.height = height;
+      
+      ctx.clearRect(0, 0, width, height);
+      
+      // Draw grid lines
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      ctx.lineWidth = 1;
+      
+      // horizontal lines
+      for (let i = 1; i < 4; i++) {
+        const y = (height / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+      
+      // Draw 50% baseline
+      ctx.strokeStyle = 'rgba(99, 102, 241, 0.2)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(0, height / 2);
+      ctx.lineTo(width, height / 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      const history = state.sandboxHistory;
+      const totalPoints = history.length;
+      
+      if (totalPoints < 1) return;
+      
+      // Plot Points
+      ctx.beginPath();
+      ctx.strokeStyle = '#6366f1';
+      ctx.lineWidth = 3;
+      
+      const paddingX = 30;
+      const paddingY = 20;
+      
+      const chartWidth = width - paddingX * 2;
+      const chartHeight = height - paddingY * 2;
+      
+      const getX = (idx) => {
+        if (totalPoints <= 1) return paddingX + chartWidth / 2;
+        return paddingX + (idx / (totalPoints - 1)) * chartWidth;
+      };
+      
+      const getY = (val) => {
+        // val ranges 0 to 100
+        return paddingY + chartHeight - (val / 100) * chartHeight;
+      };
+      
+      history.forEach((val, idx) => {
+        const px = getX(idx);
+        const py = getY(val);
+        if (idx === 0) {
+          ctx.moveTo(px, py);
+        } else {
+          ctx.lineTo(px, py);
+        }
+      });
+      ctx.stroke();
+      
+      // Draw dots on points
+      history.forEach((val, idx) => {
+        const px = getX(idx);
+        const py = getY(val);
+        ctx.beginPath();
+        ctx.fillStyle = idx === totalPoints - 1 ? '#10b981' : '#6366f1';
+        ctx.arc(px, py, idx === totalPoints - 1 ? 6 : 4, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // draw border around active point
+        if (idx === totalPoints - 1) {
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+      });
+      
+      // Y-axis Labels
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.font = '9px JetBrains Mono';
+      ctx.fillText('100%', 5, paddingY);
+      ctx.fillText('50%', 5, height / 2 + 3);
+      ctx.fillText('0%', 5, height - paddingY);
+    }
+
+    // Resize canvas chart on window resizing
+    window.addEventListener('resize', () => {
+      if (state.sandboxActive) {
+        drawSandboxChart();
+      }
+    });
+
+  </script>
+</body>
+</html>
