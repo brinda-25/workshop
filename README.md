@@ -28,8 +28,9 @@ Welcome to the **Practical Data Science & Algorithms Workshop** repository. This
 
 | No. | Quick Links |
 | :--- | :--- |
-| **1**  | 💰 [Financial Literacy](https://forms.gle/oHaMNQBJYxudL3bY9)|
-| **2**  | 🎓 [End of Program Feedback](https://forms.gle/APrDzJwyrXhmN7rb9) |
+| **1**  | 💾 [Code Simulation - The Birthday Problem](https://forms.gle/WSbQmUvVuzg1XNWG9)|
+| **2**  | 💰 [Financial Literacy](https://forms.gle/oHaMNQBJYxudL3bY9)|
+| **3**  | 🎓 [End of Program Feedback](https://forms.gle/APrDzJwyrXhmN7rb9) |
 
 <!-- | **1**  | 💻 [Python Code Review - Code Submission](https://forms.gle/MhTBiPA47z9oYTt27) |
 | **2**  | 💾 [Python Hackathon - Code Submission](https://forms.gle/6J58xhTga35Gvp2o9) |
