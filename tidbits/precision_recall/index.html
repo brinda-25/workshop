@@ -49,6 +49,7 @@
       background-attachment: fixed;
       color: var(--text-main);
       font-family: var(--font-ui);
+      font-size: 18px;
       min-height: 100vh;
       overflow-x: hidden;
       padding: 20px;
@@ -76,10 +77,10 @@
     /* Layout Wrapper */
     .terminal-container {
       width: 100%;
-      max-width: 1300px;
+      max-width: 1440px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
       margin-top: 10px;
     }
 
@@ -92,7 +93,7 @@
       backdrop-filter: blur(10px);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 16px 24px;
+      padding: 20px 28px;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
       position: relative;
       overflow: hidden;
@@ -117,32 +118,32 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
     }
 
     .brand-logo {
-      width: 32px;
-      height: 32px;
+      width: 44px;
+      height: 44px;
       background: linear-gradient(135deg, var(--accent-cyan), #0055ff);
-      border-radius: 8px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
       color: var(--bg-dark);
-      font-size: 18px;
+      font-size: 24px;
       box-shadow: 0 0 15px var(--accent-cyan-glow);
     }
 
     .brand-title h1 {
-      font-size: 20px;
+      font-size: 26px;
       font-weight: 700;
       letter-spacing: 0.5px;
       text-transform: uppercase;
     }
 
     .brand-title p {
-      font-size: 11px;
+      font-size: 14px;
       color: var(--text-muted);
       font-family: var(--font-mono);
       letter-spacing: 1px;
@@ -151,14 +152,14 @@
     .system-status {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 16px;
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 16px;
     }
 
     .status-dot {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background-color: var(--color-safe);
       border-radius: 50%;
       box-shadow: 0 0 10px var(--color-safe-glow);
@@ -175,9 +176,9 @@
       background: rgba(0, 240, 255, 0.1);
       border: 1px solid var(--accent-cyan);
       color: var(--accent-cyan);
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 20px;
-      font-size: 11px;
+      font-size: 13px;
       letter-spacing: 0.5px;
     }
 
@@ -200,7 +201,7 @@
       backdrop-filter: blur(10px);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 24px;
+      padding: 26px;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
       display: flex;
       flex-direction: column;
@@ -217,27 +218,28 @@
     }
 
     .card-header h2 {
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 600;
       letter-spacing: 0.5px;
       text-transform: uppercase;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .card-header h2::before {
       content: '';
       display: inline-block;
-      width: 4px;
-      height: 18px;
+      width: 5px;
+      height: 22px;
       background: var(--accent-cyan);
       border-radius: 2px;
     }
 
     .belt-instructions {
-      font-size: 13px;
+      font-size: 16px;
       color: var(--text-muted);
+      line-height: 1.5;
     }
 
     /* Belt Track Graphic */
@@ -254,7 +256,7 @@
     .conveyor-belt {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 15px;
+      gap: 16px;
       position: relative;
       z-index: 2;
     }
@@ -319,12 +321,12 @@
       background: rgba(14, 21, 46, 0.8);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 12px;
+      padding: 14px 10px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       z-index: 3;
@@ -346,17 +348,17 @@
 
     .bag-number {
       font-family: var(--font-mono);
-      font-size: 11px;
+      font-size: 14px;
       color: var(--text-muted);
       border: 1px solid var(--border-color);
       border-radius: 4px;
-      padding: 1px 6px;
+      padding: 2px 8px;
       align-self: flex-start;
     }
 
     .luggage-graphic {
       width: 100%;
-      height: 70px;
+      height: 75px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -365,8 +367,8 @@
     }
 
     .luggage-svg {
-      width: 60px;
-      height: 60px;
+      width: 68px;
+      height: 68px;
       filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
     }
 
@@ -420,11 +422,11 @@
     /* User Label stamps on bags */
     .badge-stamp {
       position: absolute;
-      top: -10px;
-      right: -5px;
-      font-size: 10px;
+      top: -12px;
+      right: -6px;
+      font-size: 13px;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 4px 10px;
       border-radius: 6px;
       text-transform: uppercase;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -457,9 +459,9 @@
     /* Evaluation Result badges */
     .evaluation-badge {
       font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 700;
-      padding: 4px 8px;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 8px;
       border-radius: 4px;
       text-align: center;
       width: 100%;
@@ -491,20 +493,20 @@
       backdrop-filter: blur(10px);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 24px;
+      padding: 26px;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       gap: 20px;
-      min-height: 400px;
+      min-height: 420px;
     }
 
     .xray-display {
       background: #03060f;
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      height: 180px;
+      height: 190px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -599,13 +601,14 @@
     .stat-label-container {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 16px;
       color: var(--text-muted);
       font-family: var(--font-mono);
     }
 
     .stat-value {
       font-weight: 700;
+      font-size: 16px;
       color: var(--text-main);
     }
 
@@ -618,16 +621,16 @@
     }
 
     .stat-bar-container {
-      height: 8px;
+      height: 10px;
       background: rgba(255,255,255,0.05);
-      border-radius: 4px;
+      border-radius: 5px;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.02);
     }
 
     .stat-bar {
       height: 100%;
-      border-radius: 4px;
+      border-radius: 5px;
       width: 0%;
       transition: width 0.5s ease-out;
     }
@@ -646,16 +649,16 @@
 
     .btn-action {
       font-family: var(--font-ui);
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 700;
       letter-spacing: 0.5px;
-      padding: 14px 18px;
+      padding: 15px 20px;
       border-radius: 10px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       user-select: none;
       text-transform: uppercase;
@@ -699,7 +702,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 10px 0;
+      margin: 12px 0;
     }
 
     .btn-primary-action {
@@ -707,11 +710,11 @@
       border: none;
       color: var(--bg-dark);
       font-family: var(--font-ui);
-      font-size: 16px;
+      font-size: 22px;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      padding: 16px 45px;
+      padding: 18px 50px;
       border-radius: 12px;
       cursor: pointer;
       box-shadow: 0 5px 25px rgba(0, 240, 255, 0.3);
@@ -757,22 +760,22 @@
       backdrop-filter: blur(10px);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 24px;
+      padding: 26px;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
     }
 
     /* Confusion Matrix styling */
     .matrix-container {
       display: grid;
-      grid-template-columns: 80px 1fr 1fr;
-      grid-template-rows: 40px 1fr 1fr;
-      gap: 10px;
+      grid-template-columns: 110px 1fr 1fr;
+      grid-template-rows: 48px 1fr 1fr;
+      gap: 12px;
       margin-top: 15px;
       position: relative;
     }
 
     .matrix-label {
-      font-size: 11px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -798,11 +801,11 @@
       background: rgba(14, 21, 46, 0.8);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 15px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 120px;
+      min-height: 135px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
     }
@@ -830,7 +833,7 @@
     }
 
     .cell-title {
-      font-size: 11px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -839,18 +842,18 @@
     }
 
     .cell-subtitle {
-      font-size: 9px;
+      font-size: 12px;
       color: #5d6d8a;
       text-transform: uppercase;
       margin-top: 2px;
     }
 
     .cell-value {
-      font-size: 26px;
+      font-size: 36px;
       font-weight: 800;
       color: var(--text-main);
       font-family: var(--font-mono);
-      margin: 8px 0;
+      margin: 10px 0;
       line-height: 1;
     }
 
@@ -862,13 +865,13 @@
     .cell-items {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
-      height: 22px;
+      gap: 6px;
+      height: 24px;
     }
 
     .cell-item-dot {
-      width: 8px;
-      height: 8px;
+      width: 11px;
+      height: 11px;
       border-radius: 50%;
       background: var(--text-muted);
       display: inline-block;
@@ -895,7 +898,7 @@
       background: rgba(14, 21, 46, 0.8);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 16px;
+      padding: 18px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -912,27 +915,27 @@
     }
 
     .formula-title {
-      font-size: 15px;
+      font-size: 19px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .formula-math-display {
       font-family: var(--font-mono);
       background: rgba(0, 0, 0, 0.3);
-      padding: 12px;
+      padding: 14px;
       border-radius: 8px;
       border: 1px solid rgba(255,255,255,0.03);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin: 10px 0;
-      font-size: 15px;
+      gap: 14px;
+      margin: 12px 0;
+      font-size: 20px;
     }
 
     .math-fraction {
@@ -940,19 +943,19 @@
       flex-direction: column;
       align-items: center;
       vertical-align: middle;
-      font-size: 13px;
+      font-size: 17px;
     }
 
     .math-numerator {
-      border-bottom: 1.5px solid var(--text-main);
-      padding: 0 6px 2px 6px;
+      border-bottom: 2px solid var(--text-main);
+      padding: 0 8px 3px 8px;
       text-align: center;
       display: inline-block;
       width: 100%;
     }
 
     .math-denominator {
-      padding: 2px 6px 0 6px;
+      padding: 3px 8px 0 8px;
       text-align: center;
       display: inline-block;
       width: 100%;
@@ -980,15 +983,15 @@
 
     .math-result {
       font-weight: 800;
-      font-size: 20px;
+      font-size: 26px;
       color: var(--accent-cyan);
-      margin-left: 8px;
+      margin-left: 10px;
     }
 
     .formula-explanation {
-      font-size: 12px;
+      font-size: 15px;
       color: var(--text-muted);
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     /* Security Guard Policy Tradeoffs Panel */
@@ -997,7 +1000,7 @@
       backdrop-filter: blur(10px);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 24px;
+      padding: 26px;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
     }
 
@@ -1018,7 +1021,7 @@
       background: rgba(14, 21, 46, 0.8);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 16px;
+      padding: 18px;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -1030,7 +1033,7 @@
     }
 
     .tradeoff-title {
-      font-size: 13px;
+      font-size: 17px;
       font-weight: 700;
       text-transform: uppercase;
       margin-bottom: 6px;
@@ -1040,21 +1043,21 @@
     }
 
     .tradeoff-desc {
-      font-size: 12px;
+      font-size: 15px;
       color: var(--text-muted);
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     .tradeoff-tags {
       display: flex;
-      gap: 6px;
-      margin-top: 10px;
+      gap: 8px;
+      margin-top: 12px;
     }
 
     .tag {
       font-family: var(--font-mono);
-      font-size: 9px;
-      padding: 2px 6px;
+      font-size: 12px;
+      padding: 3px 8px;
       border-radius: 3px;
       text-transform: uppercase;
       font-weight: bold;
@@ -1072,25 +1075,25 @@
 
     /* Modal / Tooltips styles if needed */
     .infotip-icon {
-      width: 14px;
-      height: 14px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       background: var(--border-color);
       color: var(--text-muted);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 12px;
       cursor: help;
       font-weight: bold;
       vertical-align: middle;
     }
 
     .help-pill {
-      font-size: 10px;
+      font-size: 12px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255,255,255,0.08);
-      padding: 2px 6px;
+      padding: 3px 8px;
       border-radius: 4px;
       font-family: var(--font-mono);
       color: var(--text-muted);
@@ -1165,7 +1168,7 @@
         <!-- BAG CLUE STATS -->
         <div class="console-stats" id="inspectionStats">
           <!-- Static/Default prompt -->
-          <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px 0;">
+          <div style="text-align: center; color: var(--text-muted); font-size: 16px; padding: 20px 0; line-height: 1.5;">
             Select a suitcase from the conveyor belt to inspect its internal profile and run diagnostics.
           </div>
         </div>
@@ -1173,11 +1176,11 @@
         <!-- LABELLING CONTROLS -->
         <div class="label-actions">
           <button class="btn-action btn-action-safe" id="btnLabelSafe" disabled>
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
             Label Safe
           </button>
           <button class="btn-action btn-action-unsafe" id="btnLabelUnsafe" disabled>
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             Label Unsafe
           </button>
         </div>
@@ -1339,7 +1342,7 @@
               <span class="tag high">Recall 100%</span>
             </div>
             <p class="tradeoff-desc">
-              Detains <strong>every single suitcase</strong>. You catch every threat ($FN=0$, so Recall is 100%), but you cause mass passenger delay with infinite false alarms ($FP$ is maximized), tanking your Precision.
+              Detains <strong>every single suitcase</strong>. You catch every threat (FN = 0, so Recall is 100%), but you cause mass passenger delay with infinite false alarms (FP is maximized), tanking your Precision.
             </p>
             <div class="tradeoff-tags">
               <span class="tag high">Recall: 100%</span>
@@ -1353,7 +1356,7 @@
               <span class="tag high">Precision 100%</span>
             </div>
             <p class="tradeoff-desc">
-              Detains a bag <strong>only if 100% sure</strong> it's a bomb. You make zero false alarms ($FP=0$, so Precision is 100%), but you let critical threats slip through ($FN$ is high) when you aren't sure, creating a terrible Recall.
+              Detains a bag <strong>only if 100% sure</strong> it's a bomb. You make zero false alarms (FP = 0, so Precision is 100%), but you let critical threats slip through (FN is high) when you aren't sure, creating a terrible Recall.
             </p>
             <div class="tradeoff-tags">
               <span class="tag low">Recall: Low</span>
@@ -1537,7 +1540,7 @@
       `;
 
       inspectionStats.innerHTML = `
-        <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px 0;">
+        <div style="text-align: center; color: var(--text-muted); font-size: 16px; padding: 20px 0; line-height: 1.5;">
           Select a suitcase from the conveyor belt to inspect its internal profile and run diagnostics.
         </div>
       `;
